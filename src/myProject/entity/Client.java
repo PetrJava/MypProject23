@@ -1,7 +1,5 @@
 package myProject.entity;
 
-import myProject.dto.BankAccount;
-
 import java.time.LocalDateTime;
 
 public class Client {
@@ -11,9 +9,6 @@ public class Client {
     private BankAccount bank_account;
     private LocalDateTime created_time;
 
-    public Client() {
-    }
-
     public Client(int client_id, String first_name, String last_name, BankAccount bankAccount,
                   LocalDateTime created_time) {
         this.client_id = client_id;
@@ -21,6 +16,9 @@ public class Client {
         this.last_name = last_name;
         this.bank_account = bankAccount;
         this.created_time = created_time;
+    }
+
+    public Client() {
     }
 
     public int getClient_id() {

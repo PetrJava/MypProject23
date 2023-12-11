@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 public class DaoRunner {
 
     public static void main(String[] args) {
-        var clientFilter = new ClientFilter(3, 0, null);
-        var clients = ClientDao.getInstance().findAll(clientFilter);
+        var clients = ClientDao.getInstance().findById(3);
         System.out.println(clients);
     }
 

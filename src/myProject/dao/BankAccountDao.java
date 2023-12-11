@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class BankAccountDao implements Dao<Integer, BankAccount> {
-    private BankAccountDao() {
+
+    public BankAccountDao() {
     }
 
     private static final BankAccountDao INSTANCE = new BankAccountDao();
