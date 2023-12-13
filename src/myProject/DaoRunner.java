@@ -1,8 +1,7 @@
 package myProject;
 
 import myProject.dao.ClientDao;
-import myProject.dto.ClientFilter;
-import myProject.entity.Client;
+import myProject.entity.ClientEntity;
 
 import java.time.LocalDateTime;
 
@@ -18,9 +17,9 @@ public class DaoRunner {
         var mayBeClient = clientDao.findById(15);
         System.out.println(mayBeClient);
 
-        mayBeClient.ifPresent(client -> {
-            client.setFirst_name("Ivan");
-            clientDao.update(client);
+        mayBeClient.ifPresent(clientEntity -> {
+            clientEntity.setFirstName("Ivan");
+            clientDao.update(clientEntity);
         });
     }
 
@@ -33,12 +32,12 @@ public class DaoRunner {
 
     private static void saveTest() {
         var clientDao = ClientDao.getInstance();
-        var client = new Client();
-        client.setClient_id(1);
-        client.setFirst_name("Petr");
-        client.setLast_name("Petrov");
+        var client = new ClientEntity();
+        client.setClientId(1);
+        client.setFirstName("Petr");
+        client.setLastName("Petrov");
 //        client.setBank_account(99);
-        client.setCreated_time(LocalDateTime.now());
+        client.setCreatedTime(LocalDateTime.now());
         var savedClient = clientDao.save(client);
         System.out.println(savedClient);
     }

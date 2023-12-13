@@ -1,8 +1,8 @@
 package myProject.dao;
 
-import myProject.dto.BankAccountDto;
 import myProject.dto.ClientFilter;
-import myProject.entity.Client;
+import myProject.entity.BankAccountEntity;
+import myProject.entity.ClientEntity;
 import myProject.exception.DaoException;
 import myProject.util.ConnectionManager;
 
@@ -13,11 +13,20 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.*;
 
-public class ClientDao implements Dao<Integer, Client> {
+public class ClientDao implements Dao<Integer, ClientEntity> {
     private ClientDao() {
     }
 
     private static final ClientDao INSTANCE = new ClientDao();
+    private static final String CLIENT_ID = "client_id";
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String BANK_ACCOUNT = "bank_account";
+    private static final String CREATED_TIME = "created_time";
+    private static final String BANK_ACCOUNT_ID = "bankAccountId";
+    private static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
+
+
     private static final String DELETE_SQL = """
             DELETE FROM client
             WHERE client_id = ?
@@ -54,7 +63,7 @@ public class ClientDao implements Dao<Integer, Client> {
 
     private final BankAccountDao bankAccountDao = BankAccountDao.getInstance();
 
-    public List<Client> findAll(ClientFilter filter) {
+    public List<ClientEntity> findAll(ClientFilter filter) {
         List<Object> parameters = new ArrayList<>();
         List<String> whereSql = new ArrayList<>();
         if (filter.last_name() != null) {
@@ -75,72 +84,72 @@ public class ClientDao implements Dao<Integer, Client> {
             }
 
             var resultSet = prepareStatement.executeQuery();
-            List<Client> clients = new ArrayList<>();
+            List<ClientEntity> clientEntities = new ArrayList<>();
             while (resultSet.next()) {
-                clients.add(buildClient(resultSet));
+                clientEntities.add(buildClient(resultSet));
             }
-            return clients;
+            return clientEntities;
         } catch (SQLException throwables) {
             throw new DaoException(throwables);
         }
     }
 
-    public List<Client> findAll() {
+    public List<ClientEntity> findAll() {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(FIND_ALL_ID)) {
             var resultSet = prepareStatement.executeQuery();
-            List<Client> clients = new ArrayList<>();
+            List<ClientEntity> clientEntities = new ArrayList<>();
             while (resultSet.next()) {
-                clients.add(buildClient(resultSet));
+                clientEntities.add(buildClient(resultSet));
             }
-            return clients;
+            return clientEntities;
         } catch (SQLException throwables) {
             throw new DaoException(throwables);
         }
     }
 
 
-    public Optional<Client> findById(Integer id) {
+    public Optional<ClientEntity> findById(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(FIND_BY_ID)) {
 
             prepareStatement.setInt(1, id);
             var resultSet = prepareStatement.executeQuery();
-            Client client = null;
+            ClientEntity clientEntity = null;
 
             if (resultSet.next()) {
-                client = buildClient(resultSet);
+                clientEntity = buildClient(resultSet);
             }
-            return Optional.ofNullable(client);
+            return Optional.ofNullable(clientEntity);
 
         } catch (SQLException throwables) {
             throw new DaoException(throwables);
         }
     }
 
-    private Client buildClient(ResultSet resultSet) throws SQLException {
-        var bankAccountDto = new BankAccountDto(
-                resultSet.getInt("bank_account_id"),
-                resultSet.getBigDecimal("bank_account_balance"),
-                resultSet.getTimestamp("created_time").toLocalDateTime());
+    private ClientEntity buildClient(ResultSet resultSet) throws SQLException {
+        var bankAccount = new BankAccountEntity(
+                resultSet.getInt(BANK_ACCOUNT_ID),
+                resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
+                resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
 
-        return new Client(
-                resultSet.getInt("client_id"),
-                resultSet.getString("First_name"),
-                resultSet.getString("Last_name"),
-                bankAccountDao.findById(resultSet.getInt("bank_account_id"),
+        return new ClientEntity(
+                resultSet.getInt(CLIENT_ID),
+                resultSet.getString(FIRST_NAME),
+                resultSet.getString(LAST_NAME),
+                bankAccountDao.findById(resultSet.getInt(BANK_ACCOUNT_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getTimestamp("created_time").toLocalDateTime());
+                resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
     }
 
-    public void update(Client client) {
+    public void update(ClientEntity clientEntity) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(UPDATE_SQL)) {
-            prepareStatement.setString(1, client.getFirst_name());
-            prepareStatement.setString(2, client.getLast_name());
-            prepareStatement.setInt(3, client.getBank_account().getBank_account_id());
-            prepareStatement.setTimestamp(4, Timestamp.valueOf(client.getCreated_time()));
-            prepareStatement.setInt(5, client.getClient_id());
+            prepareStatement.setString(1, clientEntity.getFirstName());
+            prepareStatement.setString(2, clientEntity.getLastName());
+            prepareStatement.setInt(3, clientEntity.getBankAccount().getBankAccountId());
+            prepareStatement.setTimestamp(4, Timestamp.valueOf(clientEntity.getCreatedTime()));
+            prepareStatement.setInt(5, clientEntity.getClientId());
             prepareStatement.executeUpdate();
 
         } catch (SQLException throwables) {
@@ -149,20 +158,20 @@ public class ClientDao implements Dao<Integer, Client> {
 
     }
 
-    public Client save(Client client) {
+    public ClientEntity save(ClientEntity clientEntity) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            prepareStatement.setInt(1, client.getClient_id());
-            prepareStatement.setString(2, client.getFirst_name());
-            prepareStatement.setString(3, client.getLast_name());
-            prepareStatement.setInt(4, client.getBank_account().getBank_account_id());
-            prepareStatement.setTimestamp(5, Timestamp.valueOf(client.getCreated_time()));
+            prepareStatement.setInt(1, clientEntity.getClientId());
+            prepareStatement.setString(2, clientEntity.getFirstName());
+            prepareStatement.setString(3, clientEntity.getLastName());
+            prepareStatement.setInt(4, clientEntity.getBankAccount().getBankAccountId());
+            prepareStatement.setTimestamp(5, Timestamp.valueOf(clientEntity.getCreatedTime()));
             prepareStatement.executeUpdate();
             var generatedKeys = prepareStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                client.setClient_id(generatedKeys.getInt("client_id"));
+                clientEntity.setClientId(generatedKeys.getInt(CLIENT_ID));
             }
-            return client;
+            return clientEntity;
         } catch (SQLException throwables) {
             throw new DaoException(throwables);
         }

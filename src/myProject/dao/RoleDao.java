@@ -10,6 +10,8 @@ public class RoleDao {
         return INSTANCE;
     }
 
+    private static final String ROLE_ID = "role_id";
+    private static final String ROLE = "role";
     private static final String DELETE_SQL = """
             DELETE FROM role
             WHERE role_id = ?

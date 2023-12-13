@@ -10,6 +10,8 @@ public class TypeOperationDao {
         return INSTANCE;
     }
 
+    private static final String TYPE_OPERATION_ID = "type_operation_id";
+    private static final String TYPE = "type";
     private static final String DELETE_SQL = """
             DELETE FROM type_operation
             WHERE type_operation_id = ?

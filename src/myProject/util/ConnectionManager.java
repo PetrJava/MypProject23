@@ -1,5 +1,6 @@
 package myProject.util;
 
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,8 +27,13 @@ public class ConnectionManager {
     var size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
     pool = new ArrayBlockingQueue<>(size);
         for (int i = 0; i < size; i++) {
-            pool.add(open());
-            
+            var connection = open();
+            var proxyConnection = (Connection)
+            Proxy.newProxyInstance(ConnectionManager.class.getClassLoader(), new Class[]{Connection.class},
+                    (proxy, method, args) -> method.getName().equals("close")
+                    ? pool.add((Connection) proxy)
+                            : method.invoke(connection, args));
+            pool.add(proxyConnection);
         }
     }
 

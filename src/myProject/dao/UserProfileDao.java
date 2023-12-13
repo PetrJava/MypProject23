@@ -10,6 +10,13 @@ public class UserProfileDao {
         return INSTANCE;
     }
 
+    private static final String USER_ID = "user_id";
+    private static final String LOGIN = "login";
+    private static final String PASSWORD = "password";
+    private static final String ROLE_ID = "role_id";
+    private static final String STATUS = "status";
+    private static final String CREATED_TIME = "created_time";
+
     private static final String DELETE_SQL = """
             DELETE FROM user_profile
             WHERE user_id = ?

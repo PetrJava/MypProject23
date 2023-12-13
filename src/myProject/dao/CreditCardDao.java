@@ -9,6 +9,11 @@ public class CreditCardDao {
     public static CreditCardDao getInstance() {
         return INSTANCE;
     }
+    private static final String CARD_ID = "card_id";
+    private static final String CARD_NO = "card_no";
+    private static final String CREDIT_CARD_BALANCE = "credit_card_balance";
+    private static final String CREATED_TIME = "created_time";
+    private static final String EXPIRE_DATE = "expire_date";
 
     private static final String DELETE_SQL = """
             DELETE FROM credit_card
