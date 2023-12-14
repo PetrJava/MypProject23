@@ -1,10 +1,10 @@
-package myProject.dao;
+package paymentsSystem.dao;
 
-import myProject.dto.ClientFilter;
-import myProject.entity.BankAccountEntity;
-import myProject.entity.ClientEntity;
-import myProject.exception.DaoException;
-import myProject.util.ConnectionManager;
+import paymentsSystem.dto.ClientDto;
+import paymentsSystem.entity.BankAccountEntity;
+import paymentsSystem.entity.ClientEntity;
+import paymentsSystem.exception.DaoException;
+import paymentsSystem.util.ConnectionManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
     private static final String CLIENT_ID = "client_id";
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
-    private static final String BANK_ACCOUNT = "bank_account";
+    private static final String ACCOUNT_ID = "account_id";
     private static final String CREATED_TIME = "created_time";
-    private static final String BANK_ACCOUNT_ID = "bankAccountId";
+    private static final String BANK_ACCOUNT_ID = "bank_account_id";
     private static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
 
 
@@ -44,7 +44,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             created_time = ?
             WHERE client_id = ?
             """;
-    private static final String FIND_ALL_ID = """
+    private static final String FIND_ALL = """
              SELECT  c.client_id, 
                     first_name, 
                     last_name,
@@ -57,46 +57,54 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
                     ON c.account_id = b.bank_account_id
             """;
 
-    private static final String FIND_BY_ID = FIND_ALL_ID + """
+    /**
+     * SELECT  client_id,
+     * first_name,
+     * last_name,
+     * account_id
+     * FROM client
+     * """;
+     */
+    private static final String FIND_BY_ID = FIND_ALL + """
             WHERE c.account_id = ?
             """;
 
     private final BankAccountDao bankAccountDao = BankAccountDao.getInstance();
 
-    public List<ClientEntity> findAll(ClientFilter filter) {
-        List<Object> parameters = new ArrayList<>();
-        List<String> whereSql = new ArrayList<>();
-        if (filter.last_name() != null) {
-            whereSql.add("last_name LIKE ?");
-            parameters.add("%" + filter.last_name() + "%");
-        }
-        parameters.add(filter.limit());
-        parameters.add(filter.offset());
-
-        var where = whereSql.stream()
-                .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ? "));
-        var sql = FIND_ALL_ID + where;
-
-        try (var connection = ConnectionManager.get();
-             var prepareStatement = connection.prepareStatement(sql)) {
-            for (int i = 0; i < parameters.size(); i++) {
-                prepareStatement.setObject(i + 1, parameters.get(i));
-            }
-
-            var resultSet = prepareStatement.executeQuery();
-            List<ClientEntity> clientEntities = new ArrayList<>();
-            while (resultSet.next()) {
-                clientEntities.add(buildClient(resultSet));
-            }
-            return clientEntities;
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
-        }
-    }
+//    public List<ClientEntity> findAll(ClientDto filter) {
+//        List<Object> parameters = new ArrayList<>();
+//        List<String> whereSql = new ArrayList<>();
+//        if (filter.last_name() != null) {
+//            whereSql.add("last_name LIKE ?");
+//            parameters.add("%" + filter.last_name() + "%");
+//        }
+//        parameters.add(filter.limit());
+//        parameters.add(filter.offset());
+//
+//        var where = whereSql.stream()
+//                .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ? "));
+//        var sql = FIND_ALL + where;
+//
+//        try (var connection = ConnectionManager.get();
+//             var prepareStatement = connection.prepareStatement(sql)) {
+//            for (int i = 0; i < parameters.size(); i++) {
+//                prepareStatement.setObject(i + 1, parameters.get(i));
+//            }
+//
+//            var resultSet = prepareStatement.executeQuery();
+//            List<ClientEntity> clientEntities = new ArrayList<>();
+//            while (resultSet.next()) {
+//                clientEntities.add(buildClient(resultSet));
+//            }
+//            return clientEntities;
+//        } catch (SQLException throwables) {
+//            throw new DaoException(throwables);
+//        }
+//    }
 
     public List<ClientEntity> findAll() {
         try (var connection = ConnectionManager.get();
-             var prepareStatement = connection.prepareStatement(FIND_ALL_ID)) {
+             var prepareStatement = connection.prepareStatement(FIND_ALL)) {
             var resultSet = prepareStatement.executeQuery();
             List<ClientEntity> clientEntities = new ArrayList<>();
             while (resultSet.next()) {

@@ -1,4 +1,4 @@
-package myProject.entity;
+package paymentsSystem.entity;
 
 public class TypeOperationEntity {
     private Integer typeOperationId;

@@ -1,14 +1,14 @@
-package myProject;
+package paymentsSystem;
 
-import myProject.dao.ClientDao;
-import myProject.entity.ClientEntity;
+import paymentsSystem.dao.ClientDao;
+import paymentsSystem.entity.ClientEntity;
 
 import java.time.LocalDateTime;
 
 public class DaoRunner {
 
     public static void main(String[] args) {
-        var clients = ClientDao.getInstance().findById(3);
+        var clients = ClientDao.getInstance().findById(1);
         System.out.println(clients);
     }
 

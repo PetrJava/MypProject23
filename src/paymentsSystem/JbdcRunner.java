@@ -1,7 +1,7 @@
-package myProject;
+package paymentsSystem;
 
 import org.postgresql.Driver;
-import myProject.util.ConnectionManager;
+import paymentsSystem.util.ConnectionManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package myProject.util;
+package paymentsSystem.util;
 
 import java.io.IOException;
 import java.util.Properties;

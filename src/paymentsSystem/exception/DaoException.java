@@ -1,4 +1,4 @@
-package myProject.exception;
+package paymentsSystem.exception;
 
 public class DaoException extends RuntimeException {
 

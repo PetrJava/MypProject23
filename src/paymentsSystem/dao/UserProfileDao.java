@@ -1,4 +1,4 @@
-package myProject.dao;
+package paymentsSystem.dao;
 
 public class UserProfileDao {
     public UserProfileDao() {

@@ -1,18 +1,21 @@
-package myProject.dao;
+package paymentsSystem.dao;
 
-import myProject.entity.BankAccountEntity;
-import myProject.entity.ClientEntity;
-import myProject.exception.DaoException;
-import myProject.util.ConnectionManager;
+import paymentsSystem.entity.BankAccountEntity;
+import paymentsSystem.exception.DaoException;
+import paymentsSystem.util.ConnectionManager;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
 
-    public BankAccountDao() {
+    private BankAccountDao() {
     }
 
     private static final BankAccountDao INSTANCE = new BankAccountDao();
@@ -23,6 +26,7 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
     public static BankAccountDao getInstance() {
         return INSTANCE;
     }
+
 
     private static final String DELETE_SQL = """
             DELETE FROM bank_account
@@ -40,14 +44,14 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
             WHERE bankAccountId = ?
                                 """;
 
-    private static final String FIND_ALL_ID = """
+    private static final String FIND_ALL = """
              SELECT  bankAccountId, 
                     bank_account_balance, 
                     created_time
                     FROM bank_account
             """;
 
-    private static final String FIND_BY_ID = FIND_ALL_ID + """
+    private static final String FIND_BY_ID = FIND_ALL + """
             WHERE bankAccountId = ?
             """;
 
@@ -59,11 +63,25 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
 
     @Override
     public void update(BankAccountEntity client) {
-
     }
 
     @Override
-    public ClientEntity save(BankAccountEntity client) {
+    public List<BankAccountEntity> findAll() {
+        try (var connection = ConnectionManager.get();
+        var prepareStatement=  connection.prepareStatement(FIND_ALL)) {
+            var resultSet = prepareStatement.executeQuery();
+            List<BankAccountEntity> bankAccount = new ArrayList<>();
+            while (resultSet.next()) {
+                bankAccount.add(buildBankAccount(resultSet));
+            }
+            return bankAccount;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public BankAccountEntity save(BankAccountEntity client) {
         return null;
     }
 
@@ -72,19 +90,13 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
             prepareStatement.setInt(1, id);
 
             var resultSet = prepareStatement.executeQuery();
-//            BankAccount bankAccount = null;
-//            if (resultSet.next()) {
-//                bankAccount = new BankAccount(resultSet.getInt(BANK_ACCOUNT_ID),
-//                        resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
-//                        resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
-//            }
+
             BankAccountEntity bankAccountEntity = new BankAccountEntity();
             if (resultSet.next()) {
                 bankAccountEntity.setBankAccountId(resultSet.getInt(BANK_ACCOUNT_ID));
                 bankAccountEntity.setBankAccountBalance( resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE));
                 bankAccountEntity.setCreatedTime(resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
             }
-
 
             return Optional.ofNullable(bankAccountEntity);
         } catch (SQLException throwables) {
@@ -101,8 +113,12 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
         }
     }
 
-    @Override
-    public List<BankAccountEntity> findAll() {
-        return null;
+
+    private BankAccountEntity buildBankAccount(ResultSet resultSet) throws SQLException {
+    return new BankAccountEntity(
+            resultSet.getInt(BANK_ACCOUNT_ID),
+            resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
+            resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
     }
+
 }

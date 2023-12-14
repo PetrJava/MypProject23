@@ -1,4 +1,4 @@
-package myProject.entity;
+package paymentsSystem.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package myProject.util;
+package paymentsSystem.util;
 
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
@@ -11,6 +11,7 @@ public class ConnectionManager {
     private static final String USERNAME_KEY = "db.username";
     private static final String URL_KEY = "db.url";
     private static final String POOL_SIZE_KEY = "db.pool_size";
+    private static final String POSTGRES_DRIVER = "org.postgresql.Driver";
     private static final Integer DEFAULT_POOL_SIZE = 10;
     private static ArrayBlockingQueue<Connection> pool;
 
@@ -23,16 +24,16 @@ public class ConnectionManager {
     }
 
     private static void initConnectionPool() {
-    var poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
-    var size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
-    pool = new ArrayBlockingQueue<>(size);
+        var poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
+        var size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
+        pool = new ArrayBlockingQueue<>(size);
         for (int i = 0; i < size; i++) {
             var connection = open();
             var proxyConnection = (Connection)
-            Proxy.newProxyInstance(ConnectionManager.class.getClassLoader(), new Class[]{Connection.class},
-                    (proxy, method, args) -> method.getName().equals("close")
-                    ? pool.add((Connection) proxy)
-                            : method.invoke(connection, args));
+                    Proxy.newProxyInstance(ConnectionManager.class.getClassLoader(), new Class[]{Connection.class},
+                            (proxy, method, args) -> method.getName().equals("close")
+                                    ? pool.add((Connection) proxy)
+                                    : method.invoke(connection, args));
             pool.add(proxyConnection);
         }
     }
@@ -55,9 +56,10 @@ public class ConnectionManager {
             throw new RuntimeException(e);
         }
     }
+
     private static void loadDriver() {
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(POSTGRES_DRIVER);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

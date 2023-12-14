@@ -1,4 +1,4 @@
-package myProject.entity;
+package paymentsSystem.entity;
 
 public class RoleEntity {
     private Integer roleId;

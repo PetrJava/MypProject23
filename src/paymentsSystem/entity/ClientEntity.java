@@ -1,4 +1,4 @@
-package myProject.entity;
+package paymentsSystem.entity;
 
 import java.time.LocalDateTime;
 
