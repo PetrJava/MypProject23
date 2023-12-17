@@ -18,41 +18,48 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
     private BankAccountDao() {
     }
 
-    private static final BankAccountDao INSTANCE = new BankAccountDao();
-    private static final String BANK_ACCOUNT_ID = "bankAccountId";
+
+    private static final String BANK_ACCOUNT_ID = "bank_account_Id";
     private static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
     private static final String CREATED_TIME = "created_time";
-
+    private static final BankAccountDao INSTANCE = new BankAccountDao();
     public static BankAccountDao getInstance() {
         return INSTANCE;
     }
 
 
+
+    private static final String FIND_BY_BANK_ACCOUNT_ID = """
+            SELECT *
+            FROM bank_account
+            WHERE bank_account_id = ?""";
+
     private static final String DELETE_SQL = """
             DELETE FROM bank_account
-            WHERE bankAccountId = ?
+            WHERE bank_account_id = ?
             """;
     private static final String SAVE_SQL = """
-            INSERT INTO bank_account(bankAccountId, bank_account_balance, created_time)
+            INSERT INTO bank_account(bank_account_id, bank_account_balance, created_time)
             VALUES (?, ?, ?)  
             """;
+
     private static final String UPDATE_SQL = """
             UPDATE bank_account
             SET 
             bank_account_balance = ?,
             created_time = ?
-            WHERE bankAccountId = ?
+            WHERE bank_account_id = ?
                                 """;
 
     private static final String FIND_ALL = """
-             SELECT  bankAccountId, 
+             SELECT  bank_account_id, 
                     bank_account_balance, 
                     created_time
                     FROM bank_account
             """;
 
     private static final String FIND_BY_ID = FIND_ALL + """
-            WHERE bankAccountId = ?
+            WHERE bank_account_id = ?
             """;
 
 
@@ -63,6 +70,11 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
 
     @Override
     public void update(BankAccountEntity client) {
+    }
+
+    @Override
+    public BankAccountEntity save(BankAccountEntity entity) {
+        return null;
     }
 
     @Override
@@ -80,9 +92,25 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
         }
     }
 
-    @Override
-    public BankAccountEntity save(BankAccountEntity client) {
-        return null;
+        
+    public Optional<BankAccountEntity> getFindByBankAccountId(Integer bankAccountId){
+
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(FIND_BY_BANK_ACCOUNT_ID)) {
+            prepareStatement.setObject(1, bankAccountId);
+            var resultSet = prepareStatement.executeQuery();
+
+            BankAccountEntity bankAccountEntity = new BankAccountEntity();
+            if (resultSet.next()) {
+                bankAccountEntity.setBankAccountId(resultSet.getInt(BANK_ACCOUNT_ID));
+                bankAccountEntity.setBankAccountBalance( resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE));
+                bankAccountEntity.setCreatedTime(resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
+            }
+
+            return Optional.ofNullable(bankAccountEntity);
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
     }
 
     public Optional<BankAccountEntity> findById(Integer id, Connection connection) {

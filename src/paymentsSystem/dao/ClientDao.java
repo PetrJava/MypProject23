@@ -1,6 +1,5 @@
 package paymentsSystem.dao;
 
-import paymentsSystem.dto.ClientDto;
 import paymentsSystem.entity.BankAccountEntity;
 import paymentsSystem.entity.ClientEntity;
 import paymentsSystem.exception.DaoException;
@@ -11,21 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.*;
-
 public class ClientDao implements Dao<Integer, ClientEntity> {
     private ClientDao() {
     }
 
-    private static final ClientDao INSTANCE = new ClientDao();
     private static final String CLIENT_ID = "client_id";
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
-    private static final String ACCOUNT_ID = "account_id";
     private static final String CREATED_TIME = "created_time";
     private static final String BANK_ACCOUNT_ID = "bank_account_id";
     private static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
 
+    private static final ClientDao INSTANCE = new ClientDao();
+    public static ClientDao getInstance() {
+        return INSTANCE;
+    }
+
+    private final BankAccountDao bankAccountDao = BankAccountDao.getInstance();
 
     private static final String DELETE_SQL = """
             DELETE FROM client
@@ -40,7 +41,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             SET 
             first_name = ?,
             last_name = ?,
-            bank_account = ?,
+            account_id = ?,
             created_time = ?
             WHERE client_id = ?
             """;
@@ -50,26 +51,17 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
                     last_name,
                     account_id, 
                     c.created_time,
+                    b.bank_account_id,
                     b.bank_account_balance, 
                     b.created_time
                     FROM client c 
                     JOIN bank_account b 
                     ON c.account_id = b.bank_account_id
             """;
-
-    /**
-     * SELECT  client_id,
-     * first_name,
-     * last_name,
-     * account_id
-     * FROM client
-     * """;
-     */
     private static final String FIND_BY_ID = FIND_ALL + """
-            WHERE c.account_id = ?
+            WHERE account_id = ?
             """;
 
-    private final BankAccountDao bankAccountDao = BankAccountDao.getInstance();
 
 //    public List<ClientEntity> findAll(ClientDto filter) {
 //        List<Object> parameters = new ArrayList<>();
@@ -135,20 +127,22 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
         }
     }
 
-    private ClientEntity buildClient(ResultSet resultSet) throws SQLException {
-        var bankAccount = new BankAccountEntity(
-                resultSet.getInt(BANK_ACCOUNT_ID),
-                resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
-                resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
+        private ClientEntity buildClient(ResultSet resultSet) throws SQLException {
+            var bankAccountEntity = new BankAccountEntity(
+                    resultSet.getInt(BANK_ACCOUNT_ID),
+                    resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
+                    resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
 
-        return new ClientEntity(
-                resultSet.getInt(CLIENT_ID),
-                resultSet.getString(FIRST_NAME),
-                resultSet.getString(LAST_NAME),
-                bankAccountDao.findById(resultSet.getInt(BANK_ACCOUNT_ID),
-                        resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
-    }
+            return new ClientEntity(
+                    resultSet.getInt(CLIENT_ID),
+                    resultSet.getString(FIRST_NAME),
+                    resultSet.getString(LAST_NAME),
+                    bankAccountEntity,
+                    resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
+
+        }
+
+
 
     public void update(ClientEntity clientEntity) {
         try (var connection = ConnectionManager.get();
@@ -193,10 +187,6 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
         } catch (SQLException throwables) {
             throw new DaoException(throwables);
         }
-    }
-
-    public static ClientDao getInstance() {
-        return INSTANCE;
     }
 }
 

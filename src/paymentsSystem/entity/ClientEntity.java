@@ -1,5 +1,8 @@
 package paymentsSystem.entity;
 
+import paymentsSystem.dao.BankAccountDao;
+import paymentsSystem.dao.ClientDao;
+
 import java.time.LocalDateTime;
 
 public class ClientEntity {
@@ -7,18 +10,38 @@ public class ClientEntity {
     private String firstName;
     private String lastName;
     private BankAccountEntity bankAccountEntity;
+    //    private Integer accountId;
     private LocalDateTime createdTime;
 
-    public ClientEntity(int clientId, String firstName, String lastName, BankAccountEntity bankAccountEntity,
-                        LocalDateTime createdTime) {
+    public ClientEntity() {
+    }
+
+    private static final BankAccountEntity INSTANCE = new BankAccountEntity();
+
+    public static BankAccountEntity getInstance() {
+        return INSTANCE;
+    }
+//    public Integer getAccountId() {
+//        return accountId;
+
+//    }
+//    public ClientEntity(Integer clientId, String firstName, String lastName, Integer accountId, LocalDateTime createdTime) {
+//        this.clientId = clientId;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.accountId = INSTANCE.getBankAccountId();
+//        this.createdTime = createdTime;
+
+//    }
+
+
+    public ClientEntity(Integer clientId, String firstName, String lastName,
+                        BankAccountEntity bankAccountEntity, LocalDateTime createdTime) {
         this.clientId = clientId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bankAccountEntity = bankAccountEntity;
         this.createdTime = createdTime;
-    }
-
-    public ClientEntity() {
     }
 
     public int getClientId() {

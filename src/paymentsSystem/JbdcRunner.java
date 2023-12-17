@@ -12,9 +12,9 @@ public class JbdcRunner {
     public static void main(String[] args) throws SQLException {
         Class<Driver> driverClass = Driver.class;
         String sql = """
-                INSERT INTO info (data)
+                INSERT INTO bank_account
                 Values 
-                ('newValue') 
+                (?, ?) 
                 """;
         try (var connection = ConnectionManager.get();
              var statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
@@ -23,7 +23,7 @@ public class JbdcRunner {
             var executeResult = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             var generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                var generatedId = generatedKeys.getInt(1);
+                var generatedId = generatedKeys.getString(1);
                 System.out.println(generatedId);
             }
         }

@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class BankAccountDto {
-        private Integer bankAccountId;
-        private BigDecimal bankAccountBalance;
-        private LocalDateTime createdTime;
+        private final Integer bankAccountId;
+        private final BigDecimal bankAccountBalance;
+        private final LocalDateTime createdTime;
+
 
     public BankAccountDto(Integer bankAccountId, BigDecimal bankAccountBalance, LocalDateTime createdTime) {
         this.bankAccountId = bankAccountId;
@@ -15,7 +16,15 @@ public class BankAccountDto {
         this.createdTime = createdTime;
     }
 
-    public BankAccountDto(int bankAccountId, String formatted) {
+//    public BankAccountDto(Integer bankAccountId, BigDecimal bankAccountBalance) {
+//        this.bankAccountId = bankAccountId;
+//        this.bankAccountBalance = bankAccountBalance;
+//
+//    }
+
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
     }
 
     public Integer getBankAccountId() {
@@ -26,9 +35,6 @@ public class BankAccountDto {
         return bankAccountBalance;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -48,7 +54,6 @@ public class BankAccountDto {
         return "BankAccountDto{" +
                "bankAccountId=" + bankAccountId +
                ", bankAccountBalance=" + bankAccountBalance +
-               ", createdTime=" + createdTime +
                '}';
     }
 }

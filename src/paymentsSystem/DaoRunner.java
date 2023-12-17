@@ -2,14 +2,14 @@ package paymentsSystem;
 
 import paymentsSystem.dao.ClientDao;
 import paymentsSystem.entity.ClientEntity;
+import paymentsSystem.service.ClientService;
 
 import java.time.LocalDateTime;
 
 public class DaoRunner {
-
     public static void main(String[] args) {
-        var clients = ClientDao.getInstance().findById(1);
-        System.out.println(clients);
+
+        System.out.println(ClientDao.getInstance().findAll());
     }
 
     private static void updateTest() {
