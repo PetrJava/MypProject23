@@ -3,38 +3,36 @@ package paymentsSystem.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class CreditCardEntity {
-    private Integer cardId;
+    private BankAccountEntity bankAccountEntity;
     private Integer cardNo;
     private BigDecimal creditCardBalance;
     private LocalDateTime createdTime;
-    private LocalDate expireDate;
+    private LocalDateTime expireDate;
 
-    public CreditCardEntity(int cardId, int cardNo, BigDecimal creditCardBalance, LocalDateTime createdTime, LocalDate expireDate) {
-        this.cardId = cardId;
+    public CreditCardEntity(BankAccountEntity bankAccountEntity, Integer cardNo, BigDecimal creditCardBalance, LocalDateTime createdTime, LocalDateTime expireDate) {
+        this.bankAccountEntity = bankAccountEntity;
         this.cardNo = cardNo;
         this.creditCardBalance = creditCardBalance;
         this.createdTime = createdTime;
         this.expireDate = expireDate;
     }
 
-    public CreditCardEntity() {
+    public BankAccountEntity getBankAccountEntity() {
+        return bankAccountEntity;
     }
 
-    public int getCardId() {
-        return cardId;
+    public void setBankAccountEntity(BankAccountEntity bankAccountEntity) {
+        this.bankAccountEntity = bankAccountEntity;
     }
 
-    public void setCardId(int cardId) {
-        this.cardId = cardId;
-    }
-
-    public int getCardNo() {
+    public Integer getCardNo() {
         return cardNo;
     }
 
-    public void setCardNo(int cardNo) {
+    public void setCardNo(Integer cardNo) {
         this.cardNo = cardNo;
     }
 
@@ -54,22 +52,35 @@ public class CreditCardEntity {
         this.createdTime = createdTime;
     }
 
-    public LocalDate getExpireDate() {
+    public LocalDateTime getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(LocalDate expireDate) {
+    public void setExpireDate(LocalDateTime expireDate) {
         this.expireDate = expireDate;
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CreditCardEntity that = (CreditCardEntity) o;
+        return Objects.equals(bankAccountEntity, that.bankAccountEntity) && Objects.equals(cardNo, that.cardNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bankAccountEntity, cardNo);
+    }
+
+    @Override
     public String toString() {
-        return "CreditCard{" +
-               "card_id=" + cardId +
-               ", card_no=" + cardNo +
-               ", credit_card_balance=" + creditCardBalance +
-               ", created_time=" + createdTime +
-               ", expire_date=" + expireDate +
+        return "CreditCardEntity{" +
+               "bankAccountEntity=" + bankAccountEntity +
+               ", cardNo=" + cardNo +
+               ", creditCardBalance=" + creditCardBalance +
+               ", createdTime=" + createdTime +
+               ", expireDate=" + expireDate +
                '}';
     }
 }

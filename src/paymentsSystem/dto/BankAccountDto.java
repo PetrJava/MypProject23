@@ -5,22 +5,30 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class BankAccountDto {
-        private final Integer bankAccountId;
-        private final BigDecimal bankAccountBalance;
-        private final LocalDateTime createdTime;
+    private Integer bankAccountId;
+    private BigDecimal bankAccountBalance;
+    private LocalDateTime createdTime;
 
+    public BankAccountDto() {
+    }
+
+    public void setBankAccountId(Integer bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
+
+    public void setBankAccountBalance(BigDecimal bankAccountBalance) {
+        this.bankAccountBalance = bankAccountBalance;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 
     public BankAccountDto(Integer bankAccountId, BigDecimal bankAccountBalance, LocalDateTime createdTime) {
         this.bankAccountId = bankAccountId;
         this.bankAccountBalance = bankAccountBalance;
         this.createdTime = createdTime;
     }
-
-//    public BankAccountDto(Integer bankAccountId, BigDecimal bankAccountBalance) {
-//        this.bankAccountId = bankAccountId;
-//        this.bankAccountBalance = bankAccountBalance;
-//
-//    }
 
 
     public LocalDateTime getCreatedTime() {

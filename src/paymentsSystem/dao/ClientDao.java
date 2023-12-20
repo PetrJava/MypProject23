@@ -22,6 +22,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
     private static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
 
     private static final ClientDao INSTANCE = new ClientDao();
+
     public static ClientDao getInstance() {
         return INSTANCE;
     }
@@ -63,37 +64,6 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             """;
 
 
-//    public List<ClientEntity> findAll(ClientDto filter) {
-//        List<Object> parameters = new ArrayList<>();
-//        List<String> whereSql = new ArrayList<>();
-//        if (filter.last_name() != null) {
-//            whereSql.add("last_name LIKE ?");
-//            parameters.add("%" + filter.last_name() + "%");
-//        }
-//        parameters.add(filter.limit());
-//        parameters.add(filter.offset());
-//
-//        var where = whereSql.stream()
-//                .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ? "));
-//        var sql = FIND_ALL + where;
-//
-//        try (var connection = ConnectionManager.get();
-//             var prepareStatement = connection.prepareStatement(sql)) {
-//            for (int i = 0; i < parameters.size(); i++) {
-//                prepareStatement.setObject(i + 1, parameters.get(i));
-//            }
-//
-//            var resultSet = prepareStatement.executeQuery();
-//            List<ClientEntity> clientEntities = new ArrayList<>();
-//            while (resultSet.next()) {
-//                clientEntities.add(buildClient(resultSet));
-//            }
-//            return clientEntities;
-//        } catch (SQLException throwables) {
-//            throw new DaoException(throwables);
-//        }
-//    }
-
     public List<ClientEntity> findAll() {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(FIND_ALL)) {
@@ -104,7 +74,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             }
             return clientEntities;
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("client is not finded", throwables);
         }
     }
 
@@ -123,41 +93,42 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             return Optional.ofNullable(clientEntity);
 
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("client is not finded", throwables);
         }
     }
 
-        private ClientEntity buildClient(ResultSet resultSet) throws SQLException {
-            var bankAccountEntity = new BankAccountEntity(
-                    resultSet.getInt(BANK_ACCOUNT_ID),
-                    resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
-                    resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
+    private ClientEntity buildClient(ResultSet resultSet) throws SQLException {
+        var bankAccountEntity = new BankAccountEntity(
+                resultSet.getInt(BANK_ACCOUNT_ID),
+                resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
+                resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
 
-            return new ClientEntity(
-                    resultSet.getInt(CLIENT_ID),
-                    resultSet.getString(FIRST_NAME),
-                    resultSet.getString(LAST_NAME),
-                    bankAccountEntity,
-                    resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
+        return new ClientEntity(
+                resultSet.getInt(CLIENT_ID),
+                resultSet.getString(FIRST_NAME),
+                resultSet.getString(LAST_NAME),
+                bankAccountEntity,
+                resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
 
-        }
+    }
 
 
-
-    public void update(ClientEntity clientEntity) {
+    public boolean update(ClientEntity clientEntity) {
+        int result;
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(UPDATE_SQL)) {
             prepareStatement.setString(1, clientEntity.getFirstName());
             prepareStatement.setString(2, clientEntity.getLastName());
-            prepareStatement.setInt(3, clientEntity.getBankAccount().getBankAccountId());
+            prepareStatement.setInt(3, clientEntity.getBankAccountEntity().getBankAccountId());
             prepareStatement.setTimestamp(4, Timestamp.valueOf(clientEntity.getCreatedTime()));
             prepareStatement.setInt(5, clientEntity.getClientId());
-            prepareStatement.executeUpdate();
+            result = prepareStatement.executeUpdate();
 
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            return result > 0;
+
+        } catch (SQLException exception) {
+            throw new DaoException("client %s is not updated".formatted(clientEntity.getClientId()), exception);
         }
-
     }
 
     public ClientEntity save(ClientEntity clientEntity) {
@@ -166,7 +137,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             prepareStatement.setInt(1, clientEntity.getClientId());
             prepareStatement.setString(2, clientEntity.getFirstName());
             prepareStatement.setString(3, clientEntity.getLastName());
-            prepareStatement.setInt(4, clientEntity.getBankAccount().getBankAccountId());
+            prepareStatement.setInt(4, clientEntity.getBankAccountEntity().getBankAccountId());
             prepareStatement.setTimestamp(5, Timestamp.valueOf(clientEntity.getCreatedTime()));
             prepareStatement.executeUpdate();
             var generatedKeys = prepareStatement.getGeneratedKeys();
@@ -175,7 +146,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             }
             return clientEntity;
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("client is not saved", throwables);
         }
     }
 
@@ -185,7 +156,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("client is not deleted", throwables);
         }
     }
 }

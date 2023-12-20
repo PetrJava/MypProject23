@@ -4,7 +4,7 @@ import paymentsSystem.dao.ClientDao;
 import paymentsSystem.dto.ClientDto;
 import paymentsSystem.entity.ClientEntity;
 import paymentsSystem.mapper.BaseMapper;
-import paymentsSystem.mapper.ClientDtoMapper;
+import paymentsSystem.mapper.ClientMapper;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ClientService {
 
-    private final BaseMapper<ClientEntity, ClientDto> mapper = new ClientDtoMapper();
+    private final BaseMapper<ClientEntity, ClientDto> clientDtoMapper = new ClientMapper();
 
     private ClientService() {
     }
@@ -26,7 +26,7 @@ public class ClientService {
 
     public List<ClientDto> findAll() {
         return clientDao.findAll().stream()
-                .map(mapper::toDto)
+                .map(clientDtoMapper::toDto)
                 .collect(toList());
     }
 

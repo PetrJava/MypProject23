@@ -2,35 +2,35 @@ package paymentsSystem.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class PaymentActionEntity {
 
-    private Integer paymentActionId;
+    private TypeOperationEntity typeOperationEntity;
     private LocalDateTime dateAndTime;
     private BigDecimal transactionAmount;
-    private Integer transactionFrom;
-    private Integer transactionTo;
+    private BankAccountEntity bankAccountEntityFrom;
+    private BankAccountEntity bankAccountEntityTo;
     private String status;
+    private Integer paymentActionNo;
 
-    public PaymentActionEntity(int paymentActionId, LocalDateTime dateAndTime, BigDecimal transactionAmount,
-                               int transactionFrom, int transactionTo, String status) {
-        this.paymentActionId = paymentActionId;
+    public PaymentActionEntity(TypeOperationEntity typeOperationEntity, LocalDateTime dateAndTime,
+                               BigDecimal transactionAmount, BankAccountEntity bankAccountEntityFrom, BankAccountEntity bankAccountEntityTo, String status, Integer paymentActionNo) {
+        this.typeOperationEntity = typeOperationEntity;
         this.dateAndTime = dateAndTime;
         this.transactionAmount = transactionAmount;
-        this.transactionFrom = transactionFrom;
-        this.transactionTo = transactionTo;
+        this.bankAccountEntityFrom = bankAccountEntityFrom;
+        this.bankAccountEntityTo = bankAccountEntityTo;
         this.status = status;
+        this.paymentActionNo = paymentActionNo;
     }
 
-    public PaymentActionEntity() {
+    public TypeOperationEntity getTypeOperationEntity() {
+        return typeOperationEntity;
     }
 
-    public int getPaymentActionId() {
-        return paymentActionId;
-    }
-
-    public void setPaymentActionId(int paymentActionId) {
-        this.paymentActionId = paymentActionId;
+    public void setTypeOperationEntity(TypeOperationEntity typeOperationEntity) {
+        this.typeOperationEntity = typeOperationEntity;
     }
 
     public LocalDateTime getDateAndTime() {
@@ -49,20 +49,20 @@ public class PaymentActionEntity {
         this.transactionAmount = transactionAmount;
     }
 
-    public int getTransactionFrom() {
-        return transactionFrom;
+    public BankAccountEntity getBankAccountEntityFrom() {
+        return bankAccountEntityFrom;
     }
 
-    public void setTransactionFrom(int transactionFrom) {
-        this.transactionFrom = transactionFrom;
+    public void setBankAccountEntityFrom(BankAccountEntity bankAccountEntityFrom) {
+        this.bankAccountEntityFrom = bankAccountEntityFrom;
     }
 
-    public int getTransactionTo() {
-        return transactionTo;
+    public BankAccountEntity getBankAccountEntityTo() {
+        return bankAccountEntityTo;
     }
 
-    public void setTransactionTo(int transactionTo) {
-        this.transactionTo = transactionTo;
+    public void setBankAccountEntityTo(BankAccountEntity bankAccountEntityTo) {
+        this.bankAccountEntityTo = bankAccountEntityTo;
     }
 
     public String getStatus() {
@@ -73,15 +73,37 @@ public class PaymentActionEntity {
         this.status = status;
     }
 
+    public Integer getPaymentActionNo() {
+        return paymentActionNo;
+    }
+
+    public void setPaymentActionNo(Integer paymentActionNo) {
+        this.paymentActionNo = paymentActionNo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PaymentActionEntity that = (PaymentActionEntity) o;
+        return Objects.equals(typeOperationEntity, that.typeOperationEntity) && Objects.equals(paymentActionNo, that.paymentActionNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeOperationEntity, paymentActionNo);
+    }
+
     @Override
     public String toString() {
-        return "PaymentAction{" +
-               "payment_action_id=" + paymentActionId +
-               ", date_and_time=" + dateAndTime +
-               ", transaction_amount=" + transactionAmount +
-               ", transaction_from=" + transactionFrom +
-               ", transaction_to=" + transactionTo +
+        return "PaymentActionEntity{" +
+               "typeOperationEntity=" + typeOperationEntity +
+               ", dateAndTime=" + dateAndTime +
+               ", transactionAmount=" + transactionAmount +
+               ", bankAccountEntityFrom=" + bankAccountEntityFrom +
+               ", bankAccountEntityTo=" + bankAccountEntityTo +
                ", status='" + status + '\'' +
+               ", paymentActionNo=" + paymentActionNo +
                '}';
     }
 }

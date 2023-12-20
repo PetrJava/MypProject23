@@ -1,7 +1,12 @@
 package paymentsSystem.dao;
 
-public class CreditCardDao {
-    public CreditCardDao() {
+import paymentsSystem.entity.CreditCardEntity;
+
+import java.util.List;
+import java.util.Optional;
+
+public class CreditCardDao implements Dao<Integer, CreditCardEntity> {
+    public CreditCardDao(){
     }
 
     private static final CreditCardDao INSTANCE = new CreditCardDao();
@@ -47,4 +52,28 @@ public class CreditCardDao {
             WHERE card_id = ?
             """;
 
+    @Override
+    public boolean delete(Integer id) {
+        return false;
+    }
+
+    @Override
+    public boolean update(CreditCardEntity entity) {
+        return false;
+    }
+
+    @Override
+    public CreditCardEntity save(CreditCardEntity entity) {
+        return null;
+    }
+
+    @Override
+    public Optional<CreditCardEntity> findById(Integer id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<CreditCardEntity> findAll() {
+        return null;
+    }
 }

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import paymentsSystem.dao.UserProfileDao;
 import paymentsSystem.dto.BankAccountDto;
 import paymentsSystem.dto.ClientDto;
+import paymentsSystem.entity.BankAccountEntity;
 import paymentsSystem.service.BankAccountService;
 import paymentsSystem.service.ClientService;
 import paymentsSystem.util.JspHelper;
@@ -35,19 +36,6 @@ public class BankAccountServlet extends HttpServlet {
         req.getRequestDispatcher(JspHelper.getPath("bankAccount"))
                 .forward(req, resp);
 
-//        req.getRequestDispatcher(UserProfileDao.getInstance());
-
-//        try (var printWriter = resp.getWriter()) {
-//            printWriter.write("<h1>Банковский счет клиента</h1>");
-//            printWriter.write("<ul>");
-//            bankAccountService.getFindByBankAccountId(bankAccountId).forEach(bankAccountDto -> {
-//                printWriter.write("""
-//                        <li>
-//                        Id-%d  Balance: %s $    -   Created Time: %s
-//                        </li>""".formatted(bankAccountDto.getBankAccountId(), bankAccountDto.getBankAccountBalance(), bankAccountDto.getCreatedTime()));
-//            });
-//            printWriter.write("</ul>");
-//        }
     }
 }
 

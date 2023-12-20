@@ -10,7 +10,7 @@ public class ClientDto {
         this.clientId = clientId;
     }
 
-    private  Integer clientId;
+    private Integer clientId;
     private String firstName;
     private String lastName;
     private Integer accountId;

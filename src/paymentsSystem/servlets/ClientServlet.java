@@ -34,23 +34,6 @@ public class ClientServlet extends HttpServlet {
                 .forward(req, resp);
 
 
-//        var bankAccountId = Integer.valueOf(req.getParameter("bankAccountId"));
-//        List<BankAccountDto> bankAccountDtos = bankAccountService.getFindByBankAccountId(bankAccountId);
-//        req.setAttribute("accounts",bankAccountDtos);
-//
-
-//        try (var printWriter = resp.getWriter()) {
-//            printWriter.write("<h1>Список клиентов</h1>");
-//            printWriter.write("<ul>");
-//
-//            clientService.findAll().forEach(ClientDto ->
-//                    printWriter.write("""
-//                            <li>
-//                            <a href="/accounts?bankAccountId=%d">%d - %s</a>
-//                            </li>""".formatted(ClientDto.getClientId(), ClientDto.getClientId(), ClientDto.getInfo()))
-//            );
-//            printWriter.write("</ul>");
-//        }
     }
 }
 

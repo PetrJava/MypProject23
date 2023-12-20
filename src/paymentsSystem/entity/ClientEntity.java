@@ -1,39 +1,18 @@
 package paymentsSystem.entity;
 
-import paymentsSystem.dao.BankAccountDao;
-import paymentsSystem.dao.ClientDao;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class ClientEntity {
     private Integer clientId;
     private String firstName;
     private String lastName;
     private BankAccountEntity bankAccountEntity;
-    //    private Integer accountId;
     private LocalDateTime createdTime;
 
     public ClientEntity() {
     }
-
-    private static final BankAccountEntity INSTANCE = new BankAccountEntity();
-
-    public static BankAccountEntity getInstance() {
-        return INSTANCE;
-    }
-//    public Integer getAccountId() {
-//        return accountId;
-
-//    }
-//    public ClientEntity(Integer clientId, String firstName, String lastName, Integer accountId, LocalDateTime createdTime) {
-//        this.clientId = clientId;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.accountId = INSTANCE.getBankAccountId();
-//        this.createdTime = createdTime;
-
-//    }
-
 
     public ClientEntity(Integer clientId, String firstName, String lastName,
                         BankAccountEntity bankAccountEntity, LocalDateTime createdTime) {
@@ -44,11 +23,11 @@ public class ClientEntity {
         this.createdTime = createdTime;
     }
 
-    public int getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
@@ -68,11 +47,11 @@ public class ClientEntity {
         this.lastName = lastName;
     }
 
-    public BankAccountEntity getBankAccount() {
+    public BankAccountEntity getBankAccountEntity() {
         return bankAccountEntity;
     }
 
-    public void setBankAccount(BankAccountEntity bankAccountEntity) {
+    public void setBankAccountEntity(BankAccountEntity bankAccountEntity) {
         this.bankAccountEntity = bankAccountEntity;
     }
 
@@ -82,6 +61,19 @@ public class ClientEntity {
 
     public void setCreatedTime(LocalDateTime createdTime) {
         this.createdTime = createdTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientEntity that = (ClientEntity) o;
+        return Objects.equals(clientId, that.clientId) && Objects.equals(bankAccountEntity, that.bankAccountEntity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientId, bankAccountEntity);
     }
 
     @Override

@@ -1,33 +1,36 @@
 package paymentsSystem.entity;
 
+
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class UserProfileEntity {
-    private Integer userId;
+
+    private ClientEntity clientEntity;
     private String login;
     private String password;
-    private Integer roleId;
+    private RoleEntity roleEntity;
     private Integer status;
     private LocalDateTime createdTime;
-
-    public UserProfileEntity(int userId, String login, String password, int roleId, int status, LocalDateTime createdTime) {
-        this.userId = userId;
-        this.login = login;
-        this.password = password;
-        this.roleId = roleId;
-        this.status = status;
-        this.createdTime = createdTime;
-    }
 
     public UserProfileEntity() {
     }
 
-    public int getUserId() {
-        return userId;
+    public UserProfileEntity(ClientEntity clientEntity, String login, String password, RoleEntity roleEntity, Integer status, LocalDateTime createdTime) {
+        this.clientEntity = clientEntity;
+        this.login = login;
+        this.password = password;
+        this.roleEntity = roleEntity;
+        this.status = status;
+        this.createdTime = createdTime;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public ClientEntity getClientEntity() {
+        return clientEntity;
+    }
+
+    public void setClientEntity(ClientEntity clientEntity) {
+        this.clientEntity = clientEntity;
     }
 
     public String getLogin() {
@@ -46,19 +49,19 @@ public class UserProfileEntity {
         this.password = password;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public RoleEntity getRoleEntity() {
+        return roleEntity;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRoleEntity(RoleEntity roleEntity) {
+        this.roleEntity = roleEntity;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -71,14 +74,27 @@ public class UserProfileEntity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserProfileEntity that = (UserProfileEntity) o;
+        return Objects.equals(clientEntity, that.clientEntity) && Objects.equals(login, that.login) && Objects.equals(roleEntity, that.roleEntity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientEntity, login, roleEntity);
+    }
+
+    @Override
     public String toString() {
-        return "UserProfile{" +
-               "user_id=" + userId +
+        return "UserProfileEntity{" +
+               "clientEntity=" + clientEntity +
                ", login='" + login + '\'' +
                ", password='" + password + '\'' +
-               ", role_id=" + roleId +
+               ", roleEntity=" + roleEntity +
                ", status=" + status +
-               ", created_time=" + createdTime +
+               ", createdTime=" + createdTime +
                '}';
     }
 }

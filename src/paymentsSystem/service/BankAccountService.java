@@ -2,6 +2,9 @@ package paymentsSystem.service;
 
 import paymentsSystem.dao.BankAccountDao;
 import paymentsSystem.dto.BankAccountDto;
+import paymentsSystem.entity.BankAccountEntity;
+import paymentsSystem.mapper.BankAccountMapper;
+import paymentsSystem.mapper.BaseMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +18,7 @@ public class BankAccountService {
     private static final BankAccountService INSTANCE = new BankAccountService();
 
     private final BankAccountDao bankAccountDao = BankAccountDao.getInstance();
+    private final BaseMapper<BankAccountEntity, BankAccountDto> bankDtoMapper = new BankAccountMapper();
 
     public static BankAccountService getInstance() {
         return INSTANCE;
@@ -22,17 +26,22 @@ public class BankAccountService {
 
     public List<BankAccountDto> findAll() {
         return bankAccountDao.findAll().stream()
-                .map(bankAccountEntity -> new BankAccountDto(
-                        bankAccountEntity.getBankAccountId(), bankAccountEntity.getBankAccountBalance(), bankAccountEntity.getCreatedTime()))
+                .map(bankDtoMapper::toDto)
                 .collect(toList());
     }
 
     public List<BankAccountDto> getFindByBankAccountId(Integer bankAccountId) {
         return bankAccountDao.getFindByBankAccountId(bankAccountId).stream()
-                .map(bankAccountEntity -> new BankAccountDto(
-                        bankAccountEntity.getBankAccountId(), bankAccountEntity.getBankAccountBalance(), bankAccountEntity.getCreatedTime()))
+                .map(bankDtoMapper::toDto)
                 .collect(toList());
     }
+
+    public BankAccountEntity save(BankAccountEntity bankAccountEntity) {
+        return bankAccountDao.save(bankAccountEntity);
+
+
+    }
+
 
 }
 

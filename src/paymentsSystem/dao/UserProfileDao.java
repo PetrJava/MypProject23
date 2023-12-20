@@ -1,6 +1,11 @@
 package paymentsSystem.dao;
 
-public class UserProfileDao {
+import paymentsSystem.entity.UserProfileEntity;
+
+import java.util.List;
+import java.util.Optional;
+
+public class UserProfileDao implements Dao<Integer, UserProfileEntity> {
     public UserProfileDao() {
     }
 
@@ -36,7 +41,7 @@ public class UserProfileDao {
             WHERE user_id = ?
             """;
 
-    private static final String FIND_ALL_ID = """
+    private static final String FIND_ALL_ID_SQL = """
              SELECT 
             user_id,
             login, 
@@ -47,7 +52,33 @@ public class UserProfileDao {
                     FROM user_profile
             """;
 
-    private static final String FIND_BY_ID = FIND_ALL_ID + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_ID_SQL + """
             WHERE user_profile = ?
             """;
+
+
+    @Override
+    public boolean delete(Integer id) {
+        return false;
+    }
+
+    @Override
+    public boolean update(UserProfileEntity entity) {
+        return false;
+    }
+
+    @Override
+    public UserProfileEntity save(UserProfileEntity entity) {
+        return null;
+    }
+
+    @Override
+    public Optional<UserProfileEntity> findById(Integer id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<UserProfileEntity> findAll() {
+        return null;
+    }
 }

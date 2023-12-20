@@ -4,11 +4,7 @@ import paymentsSystem.entity.BankAccountEntity;
 import paymentsSystem.exception.DaoException;
 import paymentsSystem.util.ConnectionManager;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,12 +65,26 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
     }
 
     @Override
-    public void update(BankAccountEntity client) {
+    public boolean update(BankAccountEntity client) {
+        return Boolean.FALSE;
     }
 
     @Override
-    public BankAccountEntity save(BankAccountEntity entity) {
-        return null;
+    public BankAccountEntity save(BankAccountEntity bankAccountEntity) {
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            prepareStatement.setInt(1, bankAccountEntity.getBankAccountId());
+            prepareStatement.setBigDecimal(2, bankAccountEntity.getBankAccountBalance());
+            prepareStatement.setTimestamp(3, Timestamp.valueOf(bankAccountEntity.getCreatedTime()));
+
+            var generatedKeys = prepareStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                bankAccountEntity.setBankAccountId(generatedKeys.getInt(BANK_ACCOUNT_ID));
+            }
+            return bankAccountEntity;
+        } catch (SQLException throwables) {
+            throw new DaoException("client is not saved", throwables);
+        }
     }
 
     @Override
@@ -109,7 +119,7 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
 
             return Optional.ofNullable(bankAccountEntity);
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("Bank account is not finded", throwables);
         }
     }
 
@@ -128,7 +138,7 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
 
             return Optional.ofNullable(bankAccountEntity);
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("Bank account is not finded", throwables);
         }
     }
 
@@ -137,7 +147,7 @@ public class BankAccountDao implements Dao<Integer, BankAccountEntity> {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
-            throw new DaoException(throwables);
+            throw new DaoException("Bank account is not finded", throwables);
         }
     }
 

@@ -1,5 +1,9 @@
 package paymentsSystem.entity;
 
+import paymentsSystem.dto.TypeOperationDto;
+
+import java.util.Objects;
+
 public class TypeOperationEntity {
     private Integer typeOperationId;
     private String type;
@@ -12,14 +16,6 @@ public class TypeOperationEntity {
     public TypeOperationEntity() {
     }
 
-    public int getTypeOperationId() {
-        return typeOperationId;
-    }
-
-    public void setTypeOperationId(int typeOperationId) {
-        this.typeOperationId = typeOperationId;
-    }
-
     public String getType() {
         return type;
     }
@@ -28,11 +24,32 @@ public class TypeOperationEntity {
         this.type = type;
     }
 
+    public Integer getTypeOperationId() {
+        return typeOperationId;
+    }
+
+    public void setTypeOperationId(Integer typeOperationId) {
+        this.typeOperationId = typeOperationId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TypeOperationEntity that = (TypeOperationEntity) o;
+        return Objects.equals(typeOperationId, that.typeOperationId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeOperationId);
+    }
+
     @Override
     public String toString() {
-        return "TypeOperation{" +
-               "type_operation_id=" + typeOperationId +
-               ", type='" + type + '\'' +
+        return "TypeOperationDto{" +
+               "type='" + type + '\'' +
+               ", typeOperationId=" + typeOperationId +
                '}';
     }
 }
