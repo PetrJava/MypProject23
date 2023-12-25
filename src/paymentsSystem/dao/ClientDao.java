@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class ClientDao implements Dao<Integer, ClientEntity> {
     private ClientDao() {
     }
@@ -18,7 +20,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
     private static final String CREATED_TIME = "created_time";
-    private static final String BANK_ACCOUNT_ID = "bank_account_id";
+    private static final String ACCOUNT_ID = "account_id";
     private static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
 
     private static final ClientDao INSTANCE = new ClientDao();
@@ -34,7 +36,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
             WHERE client_id = ?
             """;
     private static final String SAVE_SQL = """
-            INSERT INTO client (client_id, first_name, last_name, bank_account, created_time) 
+            INSERT INTO client (client_id, first_name, last_name, account_id, created_time)
             VALUES (?, ?, ?, ?, ?);
             """;
     private static final String UPDATE_SQL = """
@@ -99,7 +101,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
 
     private ClientEntity buildClient(ResultSet resultSet) throws SQLException {
         var bankAccountEntity = new BankAccountEntity(
-                resultSet.getInt(BANK_ACCOUNT_ID),
+                resultSet.getInt(ACCOUNT_ID),
                 resultSet.getBigDecimal(BANK_ACCOUNT_BALANCE),
                 resultSet.getTimestamp(CREATED_TIME).toLocalDateTime());
 
@@ -133,7 +135,7 @@ public class ClientDao implements Dao<Integer, ClientEntity> {
 
     public ClientEntity save(ClientEntity clientEntity) {
         try (var connection = ConnectionManager.get();
-             var prepareStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+             var prepareStatement = connection.prepareStatement(SAVE_SQL, RETURN_GENERATED_KEYS)) {
             prepareStatement.setInt(1, clientEntity.getClientId());
             prepareStatement.setString(2, clientEntity.getFirstName());
             prepareStatement.setString(3, clientEntity.getLastName());

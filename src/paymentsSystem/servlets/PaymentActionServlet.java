@@ -5,30 +5,26 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import paymentsSystem.dto.BankAccountDto;
 import paymentsSystem.dto.ClientDto;
-import paymentsSystem.service.BankAccountService;
-import paymentsSystem.service.ClientService;
+import paymentsSystem.dto.PaymentActionDto;
+import paymentsSystem.service.PaymentActionService;
 import paymentsSystem.util.JspHelper;
+import paymentsSystem.util.PathUtil;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static paymentsSystem.util.PathUtil.CLIENTS;
+import static paymentsSystem.util.PathUtil.ACTIONS;
 
-@WebServlet(CLIENTS)
-public class ClientServlet extends HttpServlet {
+@WebServlet(ACTIONS)
+public class PaymentActionServlet extends HttpServlet {
 
-    private static final ClientService clientService = ClientService.getInstance();
-
+    private static final PaymentActionService paymentActionService = PaymentActionService.getInstance();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
-        List<ClientDto> clientDtos = clientService.findAll();
-        req.setAttribute("clients", clientDtos);
+        List<PaymentActionDto> paymentActionDto = paymentActionService.findAll();
+        req.setAttribute("actions", paymentActionDto);
 //        req.getSession().setAttribute("clientMap", clientDtos.stream()
 //                .collect(Collectors.toMap(ClientDto::getClientId, ClientDto::getInfo)));
 
@@ -38,4 +34,3 @@ public class ClientServlet extends HttpServlet {
 
     }
 }
-

@@ -3,7 +3,7 @@ package paymentsSystem.mapper;
 import paymentsSystem.dto.ClientDto;
 import paymentsSystem.entity.ClientEntity;
 
-public class ClientMapper implements BaseMapper<ClientEntity, ClientDto> {
+public class ClientMapperToDto implements MapperToDto<ClientEntity, ClientDto> {
 
     @Override
     public ClientDto toDto(ClientEntity entity) {

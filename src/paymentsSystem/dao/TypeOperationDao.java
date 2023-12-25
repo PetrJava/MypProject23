@@ -1,5 +1,16 @@
 package paymentsSystem.dao;
 
+import paymentsSystem.entity.BankAccountEntity;
+import paymentsSystem.entity.ClientEntity;
+import paymentsSystem.entity.TypeOperationEntity;
+import paymentsSystem.exception.DaoException;
+import paymentsSystem.util.ConnectionManager;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class TypeOperationDao {
     public TypeOperationDao() {
     }
@@ -26,14 +37,29 @@ public class TypeOperationDao {
             WHERE type_operation_id = ?
             """;
 
-    private static final String FIND_ALL_ID = """
+    private static final String FIND_ALL_SQL = """
              SELECT 
-            type_operation_id,
             type
             FROM type_operation
             """;
 
-    private static final String FIND_BY_ID = FIND_ALL_ID + """
+    private static final String FIND_BY_ID = FIND_ALL_SQL + """
             WHERE type_operation_id = ?
             """;
+
+    public List<TypeOperationEntity> findAll() {
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            var resultSet = prepareStatement.executeQuery();
+            List<TypeOperationEntity> typeOperationEntity = new ArrayList<>();
+            while (resultSet.next()) {
+                typeOperationEntity.add(new TypeOperationEntity(
+                        resultSet.getString(TYPE)));
+            }
+            return typeOperationEntity;
+        } catch (SQLException throwables) {
+            throw new DaoException("client is not finded", throwables);
+        }
+    }
+
 }

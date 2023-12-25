@@ -3,8 +3,8 @@ package paymentsSystem.service;
 import paymentsSystem.dao.ClientDao;
 import paymentsSystem.dto.ClientDto;
 import paymentsSystem.entity.ClientEntity;
-import paymentsSystem.mapper.BaseMapper;
-import paymentsSystem.mapper.ClientMapper;
+import paymentsSystem.mapper.MapperToDto;
+import paymentsSystem.mapper.ClientMapperToDto;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ClientService {
 
-    private final BaseMapper<ClientEntity, ClientDto> clientDtoMapper = new ClientMapper();
+    private final MapperToDto<ClientEntity, ClientDto> clientDtoMapper = new ClientMapperToDto();
 
     private ClientService() {
     }

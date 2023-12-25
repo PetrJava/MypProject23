@@ -1,8 +1,9 @@
 package paymentsSystem.mapper;
 
-public interface BaseMapper<E, T> {
+public interface MapperToDto<E, T> {
 
     T toDto(E entity);
+
 }
 
 

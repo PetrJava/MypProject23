@@ -33,18 +33,17 @@ public class PaymentActionDao implements Dao<Integer, PaymentActionEntity> {
     private static final String UPDATE_SQL = """
             UPDATE payment_action
             SET 
-            payment_action_id = ?,
             date_and_time = ?,
             transaction_amount = ?,
             transaction_from = ?,
             transaction_to = ?,
             status = ?
-            WHERE payment_action_no = ?
+            WHERE payment_action_id = ?
                                 """;
 
     private static final String FIND_ALL_SQL = """
              SELECT 
-            payment_action_id,
+        
             date_and_time,
             transaction_amount,
             transaction_from,

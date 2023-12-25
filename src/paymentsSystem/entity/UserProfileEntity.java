@@ -1,36 +1,41 @@
 package paymentsSystem.entity;
 
 
+
+import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
+@Data
+@NoArgsConstructor
+@Builder
 public class UserProfileEntity {
 
-    private ClientEntity clientEntity;
+    private Integer userId;
     private String login;
+    private String email;
     private String password;
-    private RoleEntity roleEntity;
-    private Integer status;
-    private LocalDateTime createdTime;
+    private Role role;
+    private LocalDate createdTime;
 
-    public UserProfileEntity() {
-    }
-
-    public UserProfileEntity(ClientEntity clientEntity, String login, String password, RoleEntity roleEntity, Integer status, LocalDateTime createdTime) {
-        this.clientEntity = clientEntity;
+    public UserProfileEntity(Integer userId, String login, String email, String password, Role role, LocalDate createdTime) {
+        this.userId = userId;
         this.login = login;
+        this.email = email;
         this.password = password;
-        this.roleEntity = roleEntity;
-        this.status = status;
+        this.role = role;
         this.createdTime = createdTime;
     }
 
-    public ClientEntity getClientEntity() {
-        return clientEntity;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setClientEntity(ClientEntity clientEntity) {
-        this.clientEntity = clientEntity;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getLogin() {
@@ -41,6 +46,14 @@ public class UserProfileEntity {
         this.login = login;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -49,52 +62,19 @@ public class UserProfileEntity {
         this.password = password;
     }
 
-    public RoleEntity getRoleEntity() {
-        return roleEntity;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleEntity(RoleEntity roleEntity) {
-        this.roleEntity = roleEntity;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreatedTime() {
+    public LocalDate getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
+    public void setCreatedTime(LocalDate createdTime) {
         this.createdTime = createdTime;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserProfileEntity that = (UserProfileEntity) o;
-        return Objects.equals(clientEntity, that.clientEntity) && Objects.equals(login, that.login) && Objects.equals(roleEntity, that.roleEntity);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clientEntity, login, roleEntity);
-    }
-
-    @Override
-    public String toString() {
-        return "UserProfileEntity{" +
-               "clientEntity=" + clientEntity +
-               ", login='" + login + '\'' +
-               ", password='" + password + '\'' +
-               ", roleEntity=" + roleEntity +
-               ", status=" + status +
-               ", createdTime=" + createdTime +
-               '}';
     }
 }

@@ -8,6 +8,7 @@
     <title>Title</title>
 </head>
 <body>
+<%@ include file="header.jsp"%>
 <h1>Банковский счет клиента</h1>
 <ul>
     <c:forEach var="accounts" items="${requestScope.accounts}">

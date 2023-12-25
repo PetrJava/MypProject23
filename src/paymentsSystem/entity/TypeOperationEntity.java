@@ -1,7 +1,5 @@
 package paymentsSystem.entity;
 
-import paymentsSystem.dto.TypeOperationDto;
-
 import java.util.Objects;
 
 public class TypeOperationEntity {
@@ -10,6 +8,10 @@ public class TypeOperationEntity {
 
     public TypeOperationEntity(int typeOperationId, String type) {
         this.typeOperationId = typeOperationId;
+        this.type = type;
+    }
+
+    public TypeOperationEntity(String type) {
         this.type = type;
     }
 
