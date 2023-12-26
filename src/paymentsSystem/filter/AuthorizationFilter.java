@@ -6,13 +6,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import paymentsSystem.dto.UserCreateDto;
 import paymentsSystem.dto.UserProfileDto;
+import paymentsSystem.entity.Role;
+import paymentsSystem.entity.RoleEntity;
 import paymentsSystem.util.PathUtil;
 
 import java.io.IOException;
 import java.util.Set;
 
-import static paymentsSystem.util.PathUtil.LOGIN;
-import static paymentsSystem.util.PathUtil.REGISTRATION;
+import static paymentsSystem.entity.Role.ADMIN;
+import static paymentsSystem.util.PathUtil.*;
 
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
@@ -32,7 +34,7 @@ public class AuthorizationFilter implements Filter {
 
     private boolean isUserLogged(ServletRequest request) {
         var user = (UserProfileDto) ((HttpServletRequest) request).getSession().getAttribute("user");
-        return user != null; //Role.getRole() == ADMIN
+        return user != null;
     }
 
     private boolean isPublicPath(String uri) {

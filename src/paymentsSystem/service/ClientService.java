@@ -29,5 +29,10 @@ public class ClientService {
                 .map(clientDtoMapper::toDto)
                 .collect(toList());
     }
+    public boolean deleteClient(Integer id) {
+        return clientDao.delete(id);
+    }
+
+
 
 }

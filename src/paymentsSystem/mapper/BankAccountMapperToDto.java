@@ -12,4 +12,5 @@ public class BankAccountMapperToDto implements MapperToDto<BankAccountEntity, Ba
         bankAccountEntity.setCreatedTime(entity.getCreatedTime());
         return bankAccountEntity;
     }
+
 }

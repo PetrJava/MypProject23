@@ -29,7 +29,7 @@ public class BankAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        List<BankAccountDto> bankAccountDtos = bankAccountService.findAll(); // выводит всех
+        List<BankAccountDto> bankAccountDtos = bankAccountService.findAll();
         req.setAttribute("accounts", bankAccountDtos);
 
         req.getRequestDispatcher(JspHelper.getPath("bankAccounts"))

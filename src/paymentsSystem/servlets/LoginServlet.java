@@ -49,6 +49,6 @@ public class LoginServlet extends HttpServlet {
     @SneakyThrows
     private void onLoginSuccess(UserProfileDto user, HttpServletRequest req, HttpServletResponse resp) throws IOException {
     req.getSession().setAttribute("user", user);
-    resp.sendRedirect("/operations");
+    resp.sendRedirect(MAIN);
     }
 }
